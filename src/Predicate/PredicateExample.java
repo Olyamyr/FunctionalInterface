@@ -1,15 +1,39 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+package Predicate;//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
-    public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+import java.util.List;
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+public class PredicateExample {
+    public static void main(String[] args) {
+        List<String> words = List.of("Дом", "Город", "Пирамида", "Треугольник", "Тетрадь", "Танк", "Семечека");
+
+        System.out.println("\nНайдем все слова с буквой Т большой или маленькой, с буквой е большой или маленькой " +
+                "и без буквы к большой или маленькой обычным способом");
+        for (String word : words) {
+            if ((word.contains("т") || word.contains("Т")) && (word.contains("е") || word.contains("Е"))
+                    && (!word.contains("к") && !word.contains("К"))) {
+                System.out.println(word);
+            }
         }
+
+        System.out.println("\nОпределим то же самое с помощью предиката");
+        WordValidationPredicate predicate = new WordValidationPredicate();
+        for (String word : words) {
+            if (predicate.test(word)) {
+                System.out.println(word);
+            }
+        }
+
+        System.out.println("\nНайдем то же самое через стрим");
+        words
+                .stream()
+                .filter(word -> predicate.test(word))
+                .forEach(System.out::println);
+
+        //Для такого решения можно использовать предикат без отдельного класса
+        System.out.println("\nНайдем все слова с буквой Т");
+        words
+                .stream()
+                .filter(word -> word.contains("Т")) //это тоже предикат, просто однострочный
+                .forEach(System.out::println);
     }
 }
